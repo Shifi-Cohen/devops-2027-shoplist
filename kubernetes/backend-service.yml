@@ -1,13 +1,12 @@
+# backend-service.yml - a stable address for the backend
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: ____                # nginx.conf and stats use this exact name
   namespace: shoplist
 spec:
   selector:
-    app: backend
+    app: ____               # label from backend-deployment.yml
   ports:
-    - port: 5000
-      targetPort: 5000
-
-      
+    - port: ____
+      targetPort: ____

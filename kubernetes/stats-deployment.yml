@@ -1,32 +1,32 @@
+# stats-deployment.yml - your turn (step 9a). Same pattern as backend-deployment.yml
+# stats has no Secret: it only talks to the backend
 apiVersion: apps/v1
-kind: Deployment
+kind: ____
 metadata:
-  name: stats
+  name: ____
   namespace: shoplist
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stats
+      app: ____
   template:
     metadata:
       labels:
-        app: stats
+        app: ____                # exactly the same label as above
     spec:
       containers:
         - name: stats
-          image: shoplist-stats:local
-          imagePullPolicy: IfNotPresent
+          image: ____
+          imagePullPolicy: Never
           env:
             - name: BACKEND_URL
-              value: http://backend:5000  
-          ports:        
-            - containerPort: 3000
+              value: ____        # backend Service name, with http:// and port
+          ports:
+            - containerPort: ____
           readinessProbe:
             httpGet:
               path: /health
-              port: 3000
+              port: ____
             initialDelaySeconds: 5
             periodSeconds: 10
-
-
