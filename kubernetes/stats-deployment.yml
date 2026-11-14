@@ -21,7 +21,10 @@ spec:
           imagePullPolicy: Never
           env:
             - name: BACKEND_URL
-              value: http://backend:5000        # backend Service name, with http:// and port
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config       # name of the ConfigMap (app-config.yml)
+                  key: BACKEND_URL       # which key to take from it
           ports:
             - containerPort: 3000
           readinessProbe:

@@ -20,7 +20,10 @@ spec:
           imagePullPolicy: Never     # do not download: the image is already on this computer
           env:
             - name: DB_HOST
-              value: postgres           # name of the postgres Service. Not a secret, so written directly
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config  # name of the ConfigMap (app-config.yml)
+                  key: DB_HOST      # which key to take from it
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:

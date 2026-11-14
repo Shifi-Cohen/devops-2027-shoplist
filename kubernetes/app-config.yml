@@ -1,0 +1,9 @@
+# app-config.yml - ShopList settings (not secrets). backend and stats read them from here
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: shoplist
+data:
+  DB_HOST: postgres                   # name of the postgres Service. The name is the address
+  BACKEND_URL: http://backend:5000    # backend Service name, with http:// and port
