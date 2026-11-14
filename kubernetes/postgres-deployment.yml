@@ -37,7 +37,7 @@ spec:
             limits:
               cpu: 1
               memory: 2Gi
-            Requests:
+            requests:
               cpu: 1
               memory: 1Gi
       volumes:

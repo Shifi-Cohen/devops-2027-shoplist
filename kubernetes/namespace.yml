@@ -4,5 +4,4 @@
 apiVersion: v1
 kind: Namespace           # which resource creates a separate section in the cluster?
 metadata:
-  name: shoplist          # same name as in lesson 5. Every other file uses it in namespac
-  
+  name: shoplist          # same name as in lesson 5. Every other file uses it in namespace:
