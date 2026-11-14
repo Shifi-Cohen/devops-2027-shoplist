@@ -6,7 +6,7 @@ metadata:
   namespace: shoplist
 spec:
   selector:
-    app: backend               # label from backend-deployment.yml
+    app: backnd               # label from backend-deployment.yml
   ports:
     - port: 5000
       targetPort: 5000
