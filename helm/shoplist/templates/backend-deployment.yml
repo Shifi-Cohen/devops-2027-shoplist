@@ -1,0 +1,49 @@
+# backend-deployment.yml - the image we built, with passwords from the Secret
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: backend                     # the backend label
+  template:
+    metadata:
+      labels:
+        app: backend                   # exactly the same label
+    spec:
+      containers:
+        - name: backend
+          image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}               # the image we built in step 1, including the tag
+          imagePullPolicy: {{ .Values.imagePullPolicy }}     # do not download: the image is already on this computer
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config  # name of the ConfigMap (app-config.yml)
+                  key: DB_HOST      # which key to take from it
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret        # name of the Secret
+                  key: POSTGRES_DB         # which Secret key holds the database name?
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER         # which key holds the user?
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD         # which key holds the password?
+          ports:
+            - containerPort: 5000   # Flask port
+          readinessProbe:
+            httpGet:
+              path: /health            # the endpoint that answers "I am ready"
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10

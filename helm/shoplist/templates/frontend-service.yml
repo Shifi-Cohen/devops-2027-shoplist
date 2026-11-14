@@ -1,0 +1,17 @@
+# frontend-service.yml - your turn (step 9d)
+# Copied from stats-service.yml, with three differences: type NodePort, port 80, nodePort from values.yaml
+#
+# Before apply: kubectl apply --dry-run=server -f kubernetes/frontend-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: NodePort          # the door from your computer
+  selector:
+    app: frontend         # label from frontend-deployment.yml
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: {{ .Values.frontend.nodePort }}     # from values.yaml (30080 by default)

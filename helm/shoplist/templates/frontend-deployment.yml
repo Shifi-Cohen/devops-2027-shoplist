@@ -1,0 +1,25 @@
+# frontend-deployment.yml - your turn (step 9c)
+# Copied from stats-deployment.yml, without env, Secret and readinessProbe
+#
+# Before apply: kubectl apply --dry-run=server -f kubernetes/frontend-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend            # exactly the same label as above
+    spec:
+      containers:
+        - name: frontend
+          image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - containerPort: 80  # Nginx port
