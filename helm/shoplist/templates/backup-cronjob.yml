@@ -1,0 +1,40 @@
+# backup-cronjob.yml - nightly backup of the products (pg_dump) into backup-pvc
+# Created only when backup.enabled is true in values.yaml
+{{- if .Values.backup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: {{ .Values.backup.schedule | quote }}   # cluster clock is UTC
+  successfulJobsHistoryLimit: 3
+  jobTemplate:                     # CronJob creates a Job
+    spec:
+      backoffLimit: 2              # failed? try again, at most 2 more times
+      template:                    # the Job creates a pod
+        spec:
+          restartPolicy: OnFailure # a Job ends when done. Deployment would be Always
+          containers:
+            - name: backup
+              image: postgres:15-alpine   # has pg_dump inside
+              envFrom:
+                - secretRef:
+                    name: postgres-secret # POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+              command:
+                - sh
+                - -c
+                - |
+                  set -e
+                  FILE=/backup/shoplist-$(date +%Y%m%d-%H%M).sql
+                  PGPASSWORD="$POSTGRES_PASSWORD" pg_dump -h postgres -U "$POSTGRES_USER" "$POSTGRES_DB" > "$FILE"
+                  echo "backup saved: $FILE"
+                  ls -lh /backup
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+          volumes:
+            - name: backup
+              persistentVolumeClaim:
+                claimName: backup-pvc     # name of the PVC (backup-pvc.yml)
+{{- end }}

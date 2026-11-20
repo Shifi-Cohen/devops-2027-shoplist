@@ -34,12 +34,12 @@ spec:
             - name: postgres-init # must match the init.sql volume name below
               mountPath: /docker-entrypoint-initdb.d
           resources:
-            limits:
-              cpu: 1
-              memory: 2Gi
             requests:
-              cpu: 1
-              memory: 1Gi
+              cpu: {{ .Values.backend.resources.requests.cpu | quote }}
+              memory: {{ .Values.backend.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.backend.resources.limits.cpu | quote }}
+              memory: {{ .Values.backend.resources.limits.memory }}
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
