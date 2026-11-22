@@ -1,0 +1,28 @@
+# .github/workflows/hello.yml - the first workflow
+# Runs on every push. Prints a greeting and shows what the runner has.
+
+name: Hello
+
+on: push
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say hello
+        run: echo "Hello from the robot kitchen"
+
+      - name: Who am I, and where?
+        run: |
+          echo "Repo:   $GITHUB_REPOSITORY"
+          echo "Commit: $GITHUB_SHA"
+          uname -a
+          docker --version
+          python3 --version
+          node --version
+
+      - name: Get the code
+        uses: actions/checkout@v6
+
+      - name: What is in the repo?
+        run: ls
