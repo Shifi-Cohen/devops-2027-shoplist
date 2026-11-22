@@ -20,9 +20,10 @@ jobs:
           docker --version
           python3 --version
           node --version
-
+      - name: Get the code
+        uses: actions/checkout@v6
+        
       - name: What is in the repo?
         run: ls
 
-      - name: Get the code
-        uses: actions/checkout@v6
+
